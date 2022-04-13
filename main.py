@@ -31,8 +31,8 @@ def reshape(w, h):
     glViewport(0, 0, w, h)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-
     glOrtho(viewport_min.x, viewport_max.x, viewport_min.y, viewport_max.y, 0.0, 1.0)
+
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
@@ -40,8 +40,11 @@ def reshape(w, h):
 def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-
+    glClearColor(0, 0, 1, 1)
+    
     draw_polygon(polygon_vertexes)
+
+    glutSwapBuffers()
 
 def read_polygon(path):
     file = open(path)
