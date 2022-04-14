@@ -1,28 +1,29 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+from point import Point
 
 viewport_min = Point(0, 0)
-viewport_max = Point(100, 100)
+viewport_max = Point(15, 8)
 
 polygon_vertexes = []
+viewport = {}
 
 def init():
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA)
+
     glutInitWindowSize(500, 500)
     glutInitWindowPosition(100, 100)
 
-    read_polygon('EstadoRS.txt')
+    read_polygon('PoligonoDeTeste.txt')
+    create_viewport()
 
     window = glutCreateWindow("T1 - Lucas Antunes & Henrique Xavier")
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
+
+    glClearColor(0, 0, 1, 1)
 
     glutMainLoop()
 
@@ -31,7 +32,10 @@ def reshape(w, h):
     glViewport(0, 0, w, h)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    glOrtho(viewport_min.x, viewport_max.x, viewport_min.y, viewport_max.y, 0.0, 1.0)
+
+    margin_x = abs(viewport[max].x - viewport[min].x)*0.1
+    margin_y = abs(viewport[max].y - viewport[min].y)*0.1
+    glOrtho(viewport[min].x-margin_x, viewport[max].x+margin_x, viewport[min].y-margin_y, viewport[max].y+margin_y, 0.0, 1.0)
 
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
@@ -40,7 +44,7 @@ def reshape(w, h):
 def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    glClearColor(0, 0, 1, 1)
+    # glClearColor(0, 0, 1, 1)
     
     draw_polygon(polygon_vertexes)
 
@@ -66,6 +70,18 @@ def draw_polygon(vertexes):
         glVertex3f(vertex.x, vertex.y, 0)
 
     glEnd()
+
+def create_viewport():
+    viewport[min], viewport[max] = get_polygon_limits(polygon_vertexes)
+
+def get_polygon_limits(vertexes):
+    x_points = [vertex.x for vertex in vertexes]
+    y_points = [vertex.y for vertex in vertexes]
+
+    min_point = Point(min(x_points), min(y_points))
+    max_point = Point(max(x_points), max(y_points))
+
+    return min_point, max_point
 
 
 
