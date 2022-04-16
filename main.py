@@ -6,8 +6,8 @@ from point import *
 from algorithms import *
 from polygon import *
 
-RANDOM_POINTS_COUNT = 10
-POINT_SIZE = 3.0
+RANDOM_POINTS_COUNT = 1000
+POINT_SIZE = 7.0
 
 RED = (1.0, 0.0, 0.0)
 GREEN = (0.0, 1.0, 0.0)
@@ -20,8 +20,8 @@ viewport = {}
 
 
 def init():
-    seg_a = (Point(1,1), Point(3,1))
-    seg_b = (Point(2,0), Point(2,3))
+    seg_a = (Point(1, 1), Point(3, 1))
+    seg_b = (Point(2, 0), Point(2, 3))
     print(intersects(*seg_a, *seg_b))
 
     glutInit(sys.argv)
@@ -30,10 +30,11 @@ def init():
     glutInitWindowSize(500, 500)
     glutInitWindowPosition(100, 100)
 
-    polygon = read_polygon('PoligonoDeTeste.txt')
-    print(polygon)
-    create_viewport()
-    create_random_points(RANDOM_POINTS_COUNT)
+    global polygon
+    polygon = read_polygon('EstadoRS.txt')
+
+    create_viewport(polygon.limit_min, polygon.limit_max)
+    generate_random_points(RANDOM_POINTS_COUNT)
 
     window = glutCreateWindow("T1 - Lucas Antunes & Henrique Xavier")
     glutDisplayFunc(display)
@@ -56,8 +57,8 @@ def reshape(w, h):
 def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    
-    draw_polygon(polygon.vertexes)
+
+    polygon.draw()
     draw_points(random_points)
 
     glutSwapBuffers()
@@ -67,7 +68,7 @@ def read_polygon(path):
     vertexes = []
 
     file = open(path)
-    
+
     # skip first line
     file.readline()
 
@@ -76,45 +77,25 @@ def read_polygon(path):
         x = float(words[0])
         y = float(words[1])
         vertexes.append(Point(x, y))
+        print(f'processed vertex {x} {y}')
 
     return Polygon(vertexes)
 
 
-def draw_polygon(vertexes):
-    glColor3f(*WHITE)
-    glBegin(GL_LINE_LOOP)
-    
-    for vertex in vertexes:
-        glVertex3f(vertex.x, vertex.y, 0)
+def create_viewport(limit_min, limit_max):
+    viewport[min] = limit_min
+    viewport[max] = limit_max
 
-    glEnd()
+    margin_x = abs(viewport[max].x - viewport[min].x) * 0.1
+    margin_y = abs(viewport[max].y - viewport[min].y) * 0.1
 
-
-def create_viewport():
-    print(polygon)
-    viewport[min] = polygon.limit_min
-    viewport[max] = polygon.limit_max
-
-    margin_x = abs(viewport[max].x - viewport[min].x)*0.1
-    margin_y = abs(viewport[max].y - viewport[min].y)*0.1
-
-    viewport[min].x -= margin_x 
+    viewport[min].x -= margin_x
     viewport[min].y -= margin_y
-    viewport[max].x += margin_x 
+    viewport[max].x += margin_x
     viewport[max].y += margin_y
 
 
-def get_polygon_limits(vertexes):
-    x_points = [vertex.x for vertex in vertexes]
-    y_points = [vertex.y for vertex in vertexes]
-
-    min_point = Point(min(x_points), min(y_points))
-    max_point = Point(max(x_points), max(y_points))
-
-    return min_point, max_point
-
-
-def create_random_points(count):
+def generate_random_points(count):
     for _ in range(count):
         x = random.uniform(viewport[min].x, viewport[max].x)
         y = random.uniform(viewport[min].y, viewport[max].y)
@@ -122,13 +103,19 @@ def create_random_points(count):
 
 
 def draw_points(points):
-    glColor3f(*GREEN)
     glPointSize(POINT_SIZE)
+    glColor3f(*GREEN)
     glBegin(GL_POINTS)
 
     for point in points:
+        if polygon.contains_point(point):
+            glColor3f(*GREEN)
+        else:
+            glColor3f(*RED)
+
         glVertex3f(point.x, point.y, 0)
 
     glEnd()
+
 
 init()
