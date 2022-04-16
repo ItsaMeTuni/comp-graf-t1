@@ -2,7 +2,9 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import random
-from point import Point
+from point import *
+from algorithms import *
+from polygon import *
 
 RANDOM_POINTS_COUNT = 10
 POINT_SIZE = 3.0
@@ -12,19 +14,24 @@ GREEN = (0.0, 1.0, 0.0)
 WHITE = (1.0, 1.0, 1.0)
 BLACK = (0.0, 0.0, 0.0)
 
-polygon_vertexes = []
+polygon = None
 random_points = []
 viewport = {}
 
 
 def init():
+    seg_a = (Point(1,1), Point(3,1))
+    seg_b = (Point(2,0), Point(2,3))
+    print(intersects(*seg_a, *seg_b))
+
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA)
 
     glutInitWindowSize(500, 500)
     glutInitWindowPosition(100, 100)
 
-    read_polygon('PoligonoDeTeste.txt')
+    polygon = read_polygon('PoligonoDeTeste.txt')
+    print(polygon)
     create_viewport()
     create_random_points(RANDOM_POINTS_COUNT)
 
@@ -32,8 +39,7 @@ def init():
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
 
-    glClearColor(*BLACK, 0)
-
+    glClearColor(*BLACK, 1)
     glutMainLoop()
 
 
@@ -51,13 +57,15 @@ def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     
-    draw_polygon(polygon_vertexes)
+    draw_polygon(polygon.vertexes)
     draw_points(random_points)
 
     glutSwapBuffers()
 
 
 def read_polygon(path):
+    vertexes = []
+
     file = open(path)
     
     # skip first line
@@ -67,7 +75,9 @@ def read_polygon(path):
         words = line.split()
         x = float(words[0])
         y = float(words[1])
-        polygon_vertexes.append(Point(x, y))
+        vertexes.append(Point(x, y))
+
+    return Polygon(vertexes)
 
 
 def draw_polygon(vertexes):
@@ -81,7 +91,9 @@ def draw_polygon(vertexes):
 
 
 def create_viewport():
-    viewport[min], viewport[max] = get_polygon_limits(polygon_vertexes)
+    print(polygon)
+    viewport[min] = polygon.limit_min
+    viewport[max] = polygon.limit_max
 
     margin_x = abs(viewport[max].x - viewport[min].x)*0.1
     margin_y = abs(viewport[max].y - viewport[min].y)*0.1
