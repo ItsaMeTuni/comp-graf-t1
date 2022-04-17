@@ -6,22 +6,27 @@ BELOW = 'below'
 def quickhull(vertexes):
     convex_hull = []
 
-    vertexes = sorted(vertexes, key=lambda point: point.x)
+    vertexes = sort_x_axis(vertexes)
 
     # left most vertex
     v1 = vertexes[0]
     #right most vertex
     v2 = vertexes[-1]
 
-    convex_hull.append(v1)
-
     vertexes.pop(0)
     vertexes.pop(-1)
 
     above, below = create_segment(v1, v2, vertexes)
-    convex_hull += _quickhull(v1, v2, above, ABOVE)
-    convex_hull.append(v2)
-    convex_hull += _quickhull(v1, v2, below, BELOW)
+
+    top_hull = _quickhull(v1, v2, above, ABOVE)
+    bottom_hull = _quickhull(v1, v2, below, BELOW)
+
+    convex_hull += [
+        v1,
+        *sort_x_axis(top_hull),
+        v2,
+        *sort_x_axis(bottom_hull)[::-1]
+    ]
 
     return convex_hull
 
@@ -90,4 +95,8 @@ def calculate_distance(v1, v2, v3):
 
 
     return abs(a*v3.x + b*v3.y + c) / sqrt(a*a + b*b)
+
+def sort_x_axis(vertexes):
+    return sorted(vertexes, key=lambda point: point.x)
+    
 

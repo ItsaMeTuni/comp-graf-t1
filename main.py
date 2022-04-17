@@ -5,8 +5,9 @@ import random
 from point import *
 from algorithms import *
 from polygon import *
+import quickhull
 
-RANDOM_POINTS_COUNT = 1000
+RANDOM_POINTS_COUNT = 10
 POINT_SIZE = 7.0
 
 RED = (1.0, 0.0, 0.0)
@@ -17,13 +18,10 @@ BLACK = (0.0, 0.0, 0.0)
 polygon = None
 random_points = []
 viewport = {}
+convex_hull = None
 
 
 def init():
-    seg_a = (Point(1, 1), Point(3, 1))
-    seg_b = (Point(2, 0), Point(2, 3))
-    print(intersects(*seg_a, *seg_b))
-
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA)
 
@@ -35,6 +33,12 @@ def init():
 
     create_viewport(polygon.limit_min, polygon.limit_max)
     generate_random_points(RANDOM_POINTS_COUNT)
+
+    global convex_hull
+    convex_hull = Polygon(quickhull.quickhull(polygon.vertexes))
+
+    for point in convex_hull.vertexes:
+        print(point.x, point.y)
 
     window = glutCreateWindow("T1 - Lucas Antunes & Henrique Xavier")
     glutDisplayFunc(display)
@@ -59,6 +63,7 @@ def display():
     glLoadIdentity()
 
     polygon.draw()
+    convex_hull.draw()
     draw_points(random_points)
 
     glutSwapBuffers()
@@ -77,7 +82,6 @@ def read_polygon(path):
         x = float(words[0])
         y = float(words[1])
         vertexes.append(Point(x, y))
-        print(f'processed vertex {x} {y}')
 
     return Polygon(vertexes)
 
