@@ -2,6 +2,7 @@ from OpenGL.GLUT import *
 import random
 from polygon import *
 from colors import *
+from subdivided_polygon import *
 
 RANDOM_POINTS_COUNT = 1000
 POINT_SIZE = 7.0
@@ -10,6 +11,7 @@ polygon = None
 random_points = []
 viewport = {}
 convex_hull = None
+subdivided_polygon = None
 
 
 def init():
@@ -27,6 +29,9 @@ def init():
 
     global convex_hull
     convex_hull = polygon.get_convex_hull()
+
+    global subdivided_polygon
+    subdivided_polygon = SubdividedPolygon(polygon.vertexes)
 
     window = glutCreateWindow("T1 - Lucas Antunes & Henrique Xavier")
     glutDisplayFunc(display)
@@ -52,6 +57,7 @@ def display():
 
     polygon.draw(White)
     convex_hull.draw(Blue)
+    subdivided_polygon.draw_divisions()
     draw_points(random_points)
 
     glutSwapBuffers()
@@ -101,8 +107,8 @@ def draw_points(points):
 
     for point in points:
         if convex_hull.contains_point(point):
-            if polygon.contains_point(point):
-                glColor3f(*Green)
+            if subdivided_polygon.contains_point(point):
+                glColor3f(*Blue)
             else:
                 glColor3f(*Yellow)
         else:
