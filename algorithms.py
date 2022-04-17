@@ -1,3 +1,5 @@
+from math import sqrt
+
 from point import *
 
 
@@ -19,3 +21,7 @@ def intersects(k: Point, l: Point, m: Point, n: Point) -> bool:
     if not ret: return False
 
     return 0.0 <= s <= 1.0 and 0.0 <= t <= 1.0
+
+
+def dot_product(vec_a, vec_b):
+    return vec_a.x * vec_b.x + vec_a.y * vec_b.y

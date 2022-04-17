@@ -3,6 +3,7 @@ import random
 from polygon import *
 from colors import *
 from subdivided_polygon import *
+from convex_polygon import *
 
 RANDOM_POINTS_COUNT = 1000
 POINT_SIZE = 7.0
@@ -28,7 +29,7 @@ def init():
     generate_random_points(RANDOM_POINTS_COUNT)
 
     global convex_hull
-    convex_hull = polygon.get_convex_hull()
+    convex_hull = ConvexPolygon(polygon.vertexes)
 
     global subdivided_polygon
     subdivided_polygon = SubdividedPolygon(polygon.vertexes)

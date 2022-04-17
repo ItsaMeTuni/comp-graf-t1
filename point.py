@@ -8,9 +8,19 @@ class Point:
         y = self.y + other.y
         return Point(x, y)
 
+    def __sub__(self, other):
+        x = self.x - other.x
+        y = self.y - other.y
+        return Point(x, y)
+
     def __mul__(self, other: int):
         x = self.x * other
         y = self.y * other
+        return Point(x, y)
+
+    def __truediv__(self, other: int):
+        x = self.x / other
+        y = self.y / other
         return Point(x, y)
 
     def __str__(self):

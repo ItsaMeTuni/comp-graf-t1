@@ -3,7 +3,6 @@ from OpenGL.GL import *
 from quickhull import *
 from colors import *
 
-
 class Polygon:
     def __init__(self, vertexes):
         self.vertexes = vertexes
@@ -34,9 +33,6 @@ class Polygon:
             glVertex3f(vertex.x, vertex.y, 0)
 
         glEnd()
-
-    def get_convex_hull(self):
-        return Polygon(quickhull(self.vertexes))
 
 
 def get_limits(vertexes):
