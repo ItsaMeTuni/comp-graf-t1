@@ -1,14 +1,9 @@
-from OpenGL.GL import *
 from OpenGL.GLUT import *
-from OpenGL.GLU import *
 import random
-from point import *
-from algorithms import *
 from polygon import *
-import quickhull
 from colors import *
 
-RANDOM_POINTS_COUNT = 10
+RANDOM_POINTS_COUNT = 1000
 POINT_SIZE = 7.0
 
 polygon = None
@@ -31,16 +26,13 @@ def init():
     generate_random_points(RANDOM_POINTS_COUNT)
 
     global convex_hull
-    convex_hull = Polygon(quickhull.quickhull(polygon.vertexes))
-
-    for point in convex_hull.vertexes:
-        print(point.x, point.y)
+    convex_hull = polygon.get_convex_hull()
 
     window = glutCreateWindow("T1 - Lucas Antunes & Henrique Xavier")
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
 
-    glClearColor(*Color.Black, 1)
+    glClearColor(*Black, 1)
     glutMainLoop()
 
 
@@ -58,8 +50,8 @@ def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
 
-    polygon.draw()
-    convex_hull.draw()
+    polygon.draw(White)
+    convex_hull.draw(Blue)
     draw_points(random_points)
 
     glutSwapBuffers()
@@ -104,14 +96,17 @@ def generate_random_points(count):
 
 def draw_points(points):
     glPointSize(POINT_SIZE)
-    glColor3f(*Color.Green)
+    glColor3f(*Green)
     glBegin(GL_POINTS)
 
     for point in points:
-        if polygon.contains_point(point):
-            glColor3f(*Color.Green)
+        if convex_hull.contains_point(point):
+            if polygon.contains_point(point):
+                glColor3f(*Green)
+            else:
+                glColor3f(*Yellow)
         else:
-            glColor3f(*Color.Red)
+            glColor3f(*Red)
 
         glVertex3f(point.x, point.y, 0)
 

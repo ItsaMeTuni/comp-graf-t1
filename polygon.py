@@ -26,7 +26,7 @@ class Polygon:
 
         return intersection_count % 2 != 0
 
-    def draw(self, color=Color.White):
+    def draw(self, color=White):
         glColor3f(*color)
         glBegin(GL_LINE_LOOP)
 
