@@ -1,7 +1,7 @@
-from point import *
 from algorithms import *
-
 from OpenGL.GL import *
+from quickhull import *
+from colors import *
 
 
 class Polygon:
@@ -26,14 +26,17 @@ class Polygon:
 
         return intersection_count % 2 != 0
 
-    def draw(self):
-        glColor3f(1.0, 1.0, 1.0)
+    def draw(self, color=Color.White):
+        glColor3f(*color)
         glBegin(GL_LINE_LOOP)
 
         for vertex in self.vertexes:
             glVertex3f(vertex.x, vertex.y, 0)
 
         glEnd()
+
+    def get_convex_hull(self):
+        return Polygon(quickhull(self.vertexes))
 
 
 def get_limits(vertexes):

@@ -6,14 +6,10 @@ from point import *
 from algorithms import *
 from polygon import *
 import quickhull
+from colors import *
 
 RANDOM_POINTS_COUNT = 10
 POINT_SIZE = 7.0
-
-RED = (1.0, 0.0, 0.0)
-GREEN = (0.0, 1.0, 0.0)
-WHITE = (1.0, 1.0, 1.0)
-BLACK = (0.0, 0.0, 0.0)
 
 polygon = None
 random_points = []
@@ -44,7 +40,7 @@ def init():
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
 
-    glClearColor(*BLACK, 1)
+    glClearColor(*Color.Black, 1)
     glutMainLoop()
 
 
@@ -108,14 +104,14 @@ def generate_random_points(count):
 
 def draw_points(points):
     glPointSize(POINT_SIZE)
-    glColor3f(*GREEN)
+    glColor3f(*Color.Green)
     glBegin(GL_POINTS)
 
     for point in points:
         if polygon.contains_point(point):
-            glColor3f(*GREEN)
+            glColor3f(*Color.Green)
         else:
-            glColor3f(*RED)
+            glColor3f(*Color.Red)
 
         glVertex3f(point.x, point.y, 0)
 
