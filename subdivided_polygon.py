@@ -80,6 +80,12 @@ class SubdividedPolygon(Polygon):
 def get_edges_overlapping_bbox(vertexes, top_left: Point, bottom_right: Point):
     edges = []
 
+    bbox_top_edge_a = top_left
+    bbox_top_edge_a = Point(bottom_right.x, bbox_top_edge_a.y)
+
+    bbox_bottom_edge_b = bottom_right
+    bbox_bottom_edge_a = Point(top_left.x, bbox_bottom_edge_b.y)
+
     for i in range(len(vertexes)):
         c = vertexes[i - 1]
         d = vertexes[i]
@@ -87,7 +93,7 @@ def get_edges_overlapping_bbox(vertexes, top_left: Point, bottom_right: Point):
         c_in_bbox = is_point_in_bbox(top_left, bottom_right, c)
         d_in_bbox = is_point_in_bbox(top_left, bottom_right, d)
 
-        if c_in_bbox or d_in_bbox:
+        if c_in_bbox or d_in_bbox or intersects(bbox_top_edge_a, bbox_bottom_edge_b, c, d) or intersects(bbox_bottom_edge_a, bbox_bottom_edge_b, c, d):
             edges.append([c, d])
 
     return edges

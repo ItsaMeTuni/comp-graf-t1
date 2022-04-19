@@ -4,7 +4,7 @@ from subdivided_polygon import *
 from convex_polygon import *
 
 RANDOM_POINTS_COUNT = 2000
-POINT_SIZE = 7.0
+POINT_SIZE = 4.0
 
 polygon = None
 random_points = []
@@ -21,7 +21,7 @@ def init():
     glutInitWindowPosition(100, 100)
 
     global polygon
-    polygon = read_polygon('EstadoRS.txt')
+    polygon = read_polygon('testes/DenteDeSerra2.txt')
 
     create_viewport(polygon.limit_min, polygon.limit_max)
     generate_random_points(RANDOM_POINTS_COUNT)
