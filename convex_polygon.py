@@ -1,5 +1,6 @@
 from polygon import *
 from algorithms import *
+from quickhull import *
 
 
 class ConvexPolygon(Polygon):

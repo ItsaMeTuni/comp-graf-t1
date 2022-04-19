@@ -2,6 +2,18 @@ from math import sqrt
 
 from point import *
 
+intersects_called = 0
+dot_product_called = 0
+
+def reset_profiling():
+    global intersects_called
+    global dot_product_called
+
+    intersects_called = 0
+    dot_product_called = 0
+
+def print_profiling():
+    print(f'intersects_called {intersects_called} dot_product_called {dot_product_called}')
 
 def intersec2d(k: Point, l: Point, m: Point, n: Point) -> (int, float, float):
     det = (n.x - m.x) * (l.y - k.y) - (n.y - m.y) * (l.x - k.x)
@@ -16,6 +28,9 @@ def intersec2d(k: Point, l: Point, m: Point, n: Point) -> (int, float, float):
 
 
 def intersects(k: Point, l: Point, m: Point, n: Point) -> bool:
+    global intersects_called
+    intersects_called += 1
+
     ret, s, t = intersec2d(k, l, m, n)
 
     if not ret: return False
@@ -24,4 +39,7 @@ def intersects(k: Point, l: Point, m: Point, n: Point) -> bool:
 
 
 def dot_product(vec_a, vec_b):
+    global dot_product_called
+    dot_product_called += 1
+
     return vec_a.x * vec_b.x + vec_a.y * vec_b.y

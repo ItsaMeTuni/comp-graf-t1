@@ -1,6 +1,5 @@
 from algorithms import *
 from OpenGL.GL import *
-from quickhull import *
 from colors import *
 
 class Polygon:

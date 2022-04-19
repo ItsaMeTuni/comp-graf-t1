@@ -1,11 +1,9 @@
 from OpenGL.GLUT import *
 import random
-from polygon import *
-from colors import *
 from subdivided_polygon import *
 from convex_polygon import *
 
-RANDOM_POINTS_COUNT = 1000
+RANDOM_POINTS_COUNT = 2000
 POINT_SIZE = 7.0
 
 polygon = None
