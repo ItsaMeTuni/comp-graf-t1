@@ -12,8 +12,8 @@ def reset_profiling():
     intersects_called = 0
     dot_product_called = 0
 
-def print_profiling():
-    print(f'intersects_called {intersects_called} dot_product_called {dot_product_called}')
+def profiling_result():
+    return f'intersects_called {intersects_called} dot_product_called {dot_product_called}'
 
 def intersec2d(k: Point, l: Point, m: Point, n: Point) -> (int, float, float):
     det = (n.x - m.x) * (l.y - k.y) - (n.y - m.y) * (l.x - k.x)

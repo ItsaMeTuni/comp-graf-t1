@@ -2,6 +2,7 @@ from OpenGL.GLUT import *
 import random
 from subdivided_polygon import *
 from convex_polygon import *
+import time
 
 RANDOM_POINTS_COUNT = 2000
 POINT_SIZE = 4.0
@@ -21,7 +22,7 @@ def init():
     glutInitWindowPosition(100, 100)
 
     global polygon
-    polygon = read_polygon('testes/DenteDeSerra2.txt')
+    polygon = read_polygon('testes/PoligonoDeTeste2.txt')
 
     create_viewport(polygon.limit_min, polygon.limit_max)
     generate_random_points(RANDOM_POINTS_COUNT)
@@ -32,6 +33,15 @@ def init():
     global subdivided_polygon
     subdivided_polygon = SubdividedPolygon(polygon.vertexes)
 
+    print('profiling polygon')
+    profile_algo(polygon)
+
+    print('profiling convex hull')
+    profile_algo(convex_hull)
+
+    print('profiling subdivided polygon')
+    profile_algo(subdivided_polygon)
+
     window = glutCreateWindow("T1 - Lucas Antunes & Henrique Xavier")
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
@@ -39,6 +49,18 @@ def init():
     glClearColor(*Black, 1)
     glutMainLoop()
 
+def profile_algo(polygon):
+    reset_profiling()
+    start = time.time()
+
+    for point in random_points:
+        polygon.contains_point(point)
+
+    end = time.time()
+
+    delta = end - start
+
+    print(f'profiling result: {delta * 1000}ms, {profiling_result()}')
 
 def reshape(w, h):
     glViewport(0, 0, w, h)
